@@ -206,7 +206,8 @@ class Captcha
     {
         if (empty($response)) return false;
         $resp = (new ReCaptcha($this->secret))->verify($response, $clientIp);
-
-        return $resp->isSuccess();
+        if(!$resp->isSuccess()) return false;
+        $isHostValid = ($resp->getHostname()==\SiteHelper::get()->host || $resp->getHostname()==\SiteHelper::get()->sluggedHost);
+        return $isHostValid;
     }
 }
